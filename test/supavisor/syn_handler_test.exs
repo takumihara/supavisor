@@ -5,7 +5,7 @@ defmodule Supavisor.SynHandlerTest do
   alias Ecto.Adapters.SQL.Sandbox
   alias Supavisor.Support.Cluster
 
-  @id {{:single, "syn_tenant"}, "postgres", :session, "postgres", nil}
+  @id {{:single, "syn_tenant"}, "postgres", :session, "postgres", nil, "Supavisor"}
 
   @tag cluster: true
   test "resolving conflict" do

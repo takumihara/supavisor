@@ -4,7 +4,7 @@ defmodule Supavisor.DbHandlerTest do
   alias Supavisor.DbHandler, as: Db
 
   # import Mock
-  @id {{:single, "tenant"}, "user", :transaction, "postgres", nil}
+  @id {{:single, "tenant"}, "user", :transaction, "postgres", nil, "Supavisor"}
 
   defp sockpair do
     {:ok, listen} = :gen_tcp.listen(0, mode: :binary, active: false)

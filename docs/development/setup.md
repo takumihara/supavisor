@@ -15,7 +15,7 @@ add the `dev_tenant` with credentials to the database set up earlier.
 
 ```bash
 curl  -X PUT \
-  'http://localhost:4000/api/tenants/dev_tenant' \
+  'http://localhost:4000/api/tenants/dev_tenant_session' \
   --header 'Accept: */*' \
   --header 'User-Agent: Thunder Client (https://www.thunderclient.com)' \
   --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ1MTkyODI0LCJleHAiOjE5NjA3Njg4MjR9.M9jrxyvPLkUxWgOYSf5dNdJ8v_eRrq810ShFRT8N-6M' \
@@ -34,7 +34,7 @@ curl  -X PUT \
         "db_user": "postgres",
         "db_password": "postgres",
         "pool_size": 20,
-        "mode_type": "transaction",
+        "mode_type": "session",
         "is_manager": true
       }
     ]

@@ -202,7 +202,7 @@ defmodule Supavisor.Integration.ProxyTest do
 
     [{_, client_pid, _}] =
       Supavisor.get_local_manager(
-        {{:single, @tenant}, "transaction", :transaction, "postgres", nil}
+        {{:single, @tenant}, "transaction", :transaction, "postgres", nil, "Supavisor"}
       )
       |> :sys.get_state()
       |> Access.get(:tid)
@@ -297,7 +297,7 @@ defmodule Supavisor.Integration.ProxyTest do
 
     assert {:ok, pid} = single_connection(connection_opts)
 
-    id = {{:single, @tenant}, db_conf[:username], :session, db_conf[:database], nil}
+    id = {{:single, @tenant}, db_conf[:username], :session, db_conf[:database], nil, "Supavisor"}
     [{client_pid, _}] = Registry.lookup(Supavisor.Registry.TenantClients, id)
 
     P.SimpleConnection.call(pid, {:query, "select 1;"})

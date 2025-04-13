@@ -235,7 +235,8 @@ defmodule Supavisor.ClientHandler do
             data.mode,
             info.user.mode_type,
             db_name,
-            search_path
+            search_path,
+            data.app_name
           )
 
         mode = Supavisor.mode(id)
@@ -1128,7 +1129,7 @@ defmodule Supavisor.ClientHandler do
   end
 
   @spec app_name(any()) :: String.t()
-  def app_name(name) when is_binary(name), do: name
+  def app_name(name) when is_binary(name), do: name <> " via Supavisor"
 
   def app_name(name) do
     Logger.debug("ClientHandler: Invalid application name #{inspect(name)}")

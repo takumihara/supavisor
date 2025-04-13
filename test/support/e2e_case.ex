@@ -55,8 +55,15 @@ defmodule Supavisor.E2ECase do
              })
 
     on_exit(fn ->
-      _ = Supavisor.stop({{:single, external_id}, "postgres", :session, external_id, nil})
-      _ = Supavisor.stop({{:single, external_id}, "postgres", :transaction, external_id, nil})
+      _ =
+        Supavisor.stop(
+          {{:single, external_id}, "postgres", :session, external_id, nil, "Supavisor"}
+        )
+
+      _ =
+        Supavisor.stop(
+          {{:single, external_id}, "postgres", :transaction, external_id, nil, "Supavisor"}
+        )
 
       unboxed(fn ->
         assert {:ok, _} = @repo.query("DROP DATABASE #{external_id}")

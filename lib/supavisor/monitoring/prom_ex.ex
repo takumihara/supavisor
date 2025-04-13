@@ -83,7 +83,7 @@ defmodule Supavisor.Monitoring.PromEx do
       |> Enum.uniq()
 
     _ =
-      Enum.reduce(pools, metrics, fn {{_type, tenant}, _, _, _, _}, acc ->
+      Enum.reduce(pools, metrics, fn {{_type, tenant}, _, _, _, _, _}, acc ->
         {matched, rest} = Enum.split_with(acc, &String.contains?(&1, "tenant=\"#{tenant}\""))
 
         if matched != [] do

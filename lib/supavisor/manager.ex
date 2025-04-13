@@ -39,7 +39,7 @@ defmodule Supavisor.Manager do
 
     [args | _] = Enum.filter(args.replicas, fn e -> e.replica_type == :write end)
 
-    {{type, tenant}, user, _mode, db_name, _search_path} = args.id
+    {{type, tenant}, user, _mode, db_name, _search_path, _app_name} = args.id
 
     state = %{
       id: args.id,

@@ -58,7 +58,7 @@ defmodule Supavisor.Monitoring.PromExTest do
       check all db_name <- string(:printable, min_length: 1, max_length: 63) do
         Supavisor.Monitoring.Telem.client_join(
           :ok,
-          {{:single, tenant}, user, :session, db_name, nil}
+          {{:single, tenant}, user, :session, db_name, nil, "Supavisor"}
         )
 
         metrics = @subject.get_metrics()
@@ -86,7 +86,7 @@ defmodule Supavisor.Monitoring.PromExTest do
       check all user <- string(:printable, min_length: 1, max_length: 63) do
         Supavisor.Monitoring.Telem.client_join(
           :ok,
-          {{:single, tenant}, user, :session, db_name, nil}
+          {{:single, tenant}, user, :session, db_name, nil, nil}
         )
 
         metrics = @subject.get_metrics()
@@ -114,7 +114,7 @@ defmodule Supavisor.Monitoring.PromExTest do
       check all tenant <- string(:printable, min_length: 1) do
         Supavisor.Monitoring.Telem.client_join(
           :ok,
-          {{:single, tenant}, user, :session, db_name, nil}
+          {{:single, tenant}, user, :session, db_name, nil, nil}
         )
 
         metrics = @subject.get_metrics()

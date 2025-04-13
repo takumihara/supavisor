@@ -15,7 +15,9 @@ defmodule Supavisor do
   @type workers :: %{manager: pid, pool: pid}
   @type secrets :: {:password | :auth_query, fun()}
   @type mode :: :transaction | :session | :native | :proxy
-  @type id :: {{:single | :cluster, String.t()}, String.t(), mode, String.t(), String.t() | nil}
+  @type id ::
+          {{:single | :cluster, String.t()}, String.t(), mode, String.t(), String.t() | nil,
+           String.t()}
   @type subscribe_opts :: %{workers: workers, ps: list, idle_timeout: integer}
 
   @registry Supavisor.Registry.Tenants
@@ -222,9 +224,17 @@ defmodule Supavisor do
     end
   end
 
-  @spec id({:single | :cluster, String.t()}, String.t(), mode, mode, String.t(), String.t() | nil) ::
+  @spec id(
+          {:single | :cluster, String.t()},
+          String.t(),
+          mode,
+          mode,
+          String.t(),
+          String.t() | nil,
+          String.t()
+        ) ::
           id
-  def id(tenant, user, port_mode, user_mode, db_name, search_path) do
+  def id(tenant, user, port_mode, user_mode, db_name, search_path, app_name) do
     # temporary hack
     mode =
       if port_mode == :transaction do
@@ -233,17 +243,20 @@ defmodule Supavisor do
         port_mode
       end
 
-    {tenant, user, mode, db_name, search_path}
+    {tenant, user, mode, db_name, search_path, app_name}
   end
 
   @spec tenant(id) :: String.t()
-  def tenant({{_, tenant}, _, _, _, _}), do: tenant
+  def tenant({{_, tenant}, _, _, _, _, _}), do: tenant
 
   @spec mode(id) :: atom()
-  def mode({_, _, mode, _, _}), do: mode
+  def mode({_, _, mode, _, _, _}), do: mode
 
   @spec search_path(id) :: String.t() | nil
-  def search_path({_, _, _, _, search_path}), do: search_path
+  def search_path({_, _, _, _, search_path, _}), do: search_path
+
+  @spec app_name(id) :: String.t()
+  def app_name({_, _, _, _, _, app_name}), do: app_name
 
   @spec determine_node(id, String.t() | nil) :: Node.t()
   def determine_node(id, availability_zone) do
@@ -278,7 +291,7 @@ defmodule Supavisor do
 
   @spec start_local_pool(id, secrets, atom()) :: {:ok, pid} | {:error, any}
   def start_local_pool(
-        {{type, tenant}, _user, _mode, _db_name, _search_path} = id,
+        {{type, tenant}, _user, _mode, _db_name, _search_path, _app_name} = id,
         secrets,
         log_level \\ nil
       ) do
@@ -324,7 +337,7 @@ defmodule Supavisor do
 
   defp supervisor_args(
          tenant_record,
-         {tenant, user, mode, db_name, _search_path} = id,
+         {tenant, user, mode, db_name, _search_path, app_name} = id,
          {method, secrets},
          log_level
        ) do
@@ -368,7 +381,7 @@ defmodule Supavisor do
       auth_query: auth_query,
       database: if(db_name != nil, do: db_name, else: db_database),
       password: fn -> db_pass end,
-      application_name: "Supavisor",
+      application_name: app_name,
       ip_version: Helpers.ip_version(ip_ver, db_host),
       upstream_ssl: tenant_record.upstream_ssl,
       upstream_verify: tenant_record.upstream_verify,
